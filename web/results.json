@@ -1,0 +1,13 @@
+{
+ "sites": [],
+ "moon": {
+  "windows": {},
+  "temp": null
+ },
+ "cannot_reproduce": [],
+ "weights": {
+  "slope": 1.0,
+  "roughness": 1.0,
+  "low_sun": 1.0
+ }
+}
