@@ -68,7 +68,7 @@
     ],
     "breaks": [
       "Sediments and salt crusts, not igneous rock",
-      "Mostly gentle alluvial slopes, few steep or cratered surfaces",
+      "Rounded hills and alluvial valleys shaped by rare water and wind, with no impact craters",
       "Mid-latitude (24 S): short low-sun periods"
     ],
     "access": "Road access from Antofagasta, Chile. Easiest logistics of the high-desert sites."
@@ -82,7 +82,7 @@
     ],
     "breaks": [
       "Dark basalt, unlike the bright highlands",
-      "Fjord, glaciers and snow sit inside or near the 10 km window",
+      "Fjord water covers roughly 20% of the 10 km window (east edge and a strip along the top); flat water reads as 0-degree slope and inflates the flat bins",
       "Polar night in winter and midnight sun in summer, so low sun is seasonal"
     ],
     "access": "Flight to Longyearbyen, then boat to Bockfjorden in summer. Governor of Svalbard rules apply, including polar bear protection."
@@ -92,10 +92,11 @@
     "works": [
       "Extreme latitude: the longest low-sun seasons among Northern Hemisphere sites",
       "Very dry, nearly unvegetated ground",
-      "Large ice-free area"
+      "Large ice-free area",
+      "Dissected plateau with mesas, buttes and steep valley walls gives a wide slope range"
     ],
     "breaks": [
-      "Mostly sedimentary rock, not basalt or anorthosite",
+      "Flat-lying sedimentary layers, not basalt or anorthosite; erosional terraces, not impact craters",
       "Snow cover for much of the year",
       "Near the 83 N edge of ASTER GDEM coverage"
     ],
@@ -109,7 +110,7 @@
       "Dolerite and granite boulder fields, with steep valley walls"
     ],
     "breaks": [
-      "Lakes and glaciers may sit inside the 10 km window",
+      "Ice-covered lakes and glacier tongues sit just outside the window, and ridges hold snow patches",
       "Mixed rock types (granite, dolerite, sandstone)",
       "Permafrost and seasonal meltwater"
     ],
@@ -155,7 +156,7 @@
       "Target rock is sandstone, not basalt or anorthosite",
       "Low latitude (22 N): the Sun crosses 0 to 5 degrees in roughly 20 to 25 minutes"
     ],
-    "access": "Remote corner of Egypt's Western Desert near the Sudan and Libya borders. Needs military permits and a multi-day 4x4 expedition."
+    "access": "Remote corner of Egypt's Western Desert right on the Sudan border: the crater is about 2 km north of it, and roughly 40% of the 10 km window lies in Sudan. Needs Egyptian military permits and a multi-day 4x4 expedition."
   },
   "black_desert": {
     "why": "Hills capped with dark basalt and dolerite over sandstone south of Bahariya Oasis, the most reachable Egyptian site from Cairo.",
@@ -167,7 +168,8 @@
     "breaks": [
       "Dark basalt over orange sandstone: patchy brightness, unlike the uniform highlands",
       "Mostly gentle slopes between the hills",
-      "Low latitude (28 N): low sun lasts only minutes each day"
+      "Low latitude (28 N): low sun lasts only minutes each day",
+      "Irrigated centre-pivot farms are spreading across the surrounding desert, so the bare surface may not stay untouched"
     ],
     "access": "About 370 km by paved road from Cairo via Bahariya Oasis. Day trips by 4x4 are common."
   },
