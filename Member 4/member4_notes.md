@@ -14,7 +14,7 @@ Pass rule: mostly bare ground, no ice sheet, no town, no large water body.
 
 | id | window | check | notes |
 |---|---|---|---|
-| haughton | [open](https://worldview.earthdata.nasa.gov/?v=-89.8579,75.3351,-89.5021,75.4249&t=2026-07-15) | | Window is smaller than the 23 km crater, so it shows the interior only |
+| haughton | [open](https://worldview.earthdata.nasa.gov/?v=-89.8579,75.3351,-89.5021,75.4249&t=2026-07-15) | **PASS** | Clear on 2026-07-17 (HLS). Bare tan-grey breccia ground cut by small valleys; small lakes and leftover gully snow only. No town, no ice sheet. Centre unchanged (75.38, -89.68) |
 | sp_crater | [open](https://worldview.earthdata.nasa.gov/?v=-111.6852,35.5351,-111.5748,35.6249&t=2026-07-15) | | |
 | meteor_crater | [open](https://worldview.earthdata.nasa.gov/?v=-111.0749,34.9851,-110.9651,35.0749&t=2026-07-15) | | Visitor centre is fine, not a town |
 | mauna_kea | [open](https://worldview.earthdata.nasa.gov/?v=-155.5177,19.7151,-155.4223,19.8049&t=2026-07-15) | | Check the window is not mostly vegetated lower slope |
