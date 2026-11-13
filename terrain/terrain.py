@@ -1,14 +1,15 @@
-"""Terrain lane: slope + roughness histograms for every site, scored against the Moon.
+"""Terrain lane: slope + roughness histograms for every site, scored against the Moon and Mars.
 
-Reads   data/sites.json, data/dem/earth/<id>/*dem*.tif, data/dem/<moon dem path>
+Reads   data/sites.json, data/dem/earth/<id>/*dem*.tif, data/dem/<moon or mars dem path>
 Writes  out/terrain.json   (shape agreed in CONTRACTS.md)
 
 Every DEM is cut to a 10 x 10 km window and resampled to 30 m:
-  Earth -> local UTM zone, bilinear;  Moon -> its own polar stereographic grid, averaged.
+  Earth -> local UTM zone, bilinear;  Moon -> its own polar stereographic grid, averaged;
+  Mars  -> local Transverse Mercator around the window centre, averaged.
 
 Usage:
   python terrain.py                    # all sites
-  python terrain.py --only svalbard    # one Earth site (+ the Moon reference, always)
+  python terrain.py --only svalbard    # one Earth site (+ the Moon and Mars references, always)
 """
 import argparse
 import glob
@@ -58,6 +59,44 @@ def earth_window(site, dem_dir):
               dst_transform=dst_transform, dst_crs=dst_crs, dst_nodata=np.nan,
               resampling=Resampling.bilinear)
     return z
+
+
+def planet_window_latlon(site, dem_dir):
+    """Moon/Mars window centred on site lat/lon, cut on a local Transverse Mercator grid.
+
+    A local projection keeps metres true in every direction, so slopes are not distorted by the
+    file's own map projection (Mars mosaics are equirectangular, which stretches east-west)."""
+    from pyproj.crs import ProjectedCRS
+    from pyproj.crs.coordinate_operation import TransverseMercatorConversion
+    from rasterio.crs import CRS as RioCRS
+
+    path = os.path.join(dem_dir, site["dem"])
+    with rasterio.open(path) as src:
+        src_crs = CRS.from_user_input(src.crs.to_wkt())
+        geo = src_crs.geodetic_crs
+        local = ProjectedCRS(
+            conversion=TransverseMercatorConversion(
+                latitude_natural_origin=site["lat"], longitude_natural_origin=site["lon"],
+                false_easting=0, false_northing=0, scale_factor_natural_origin=1.0),
+            geodetic_crs=geo)
+        n = N_PIX
+        half = n * GRID_M / 2
+        dst_transform = from_origin(-half, half, GRID_M, GRID_M)
+        z = np.full((n, n), np.nan, dtype="float64")
+        src_res = max(abs(src.res[0]), abs(src.res[1]))
+        reproject(rasterio.band(src, 1), z,
+                  src_transform=src.transform, src_crs=src.crs, src_nodata=src.nodata,
+                  dst_transform=dst_transform, dst_crs=RioCRS.from_wkt(local.to_wkt()),
+                  dst_nodata=np.nan,
+                  resampling=Resampling.average if src_res < GRID_M else Resampling.bilinear)
+    return z
+
+
+def planet_window(site, dem_dir):
+    """Reference window on the Moon or Mars. Uses lat/lon if given, else x/y or the file centre."""
+    if "lat" in site and "lon" in site:
+        return planet_window_latlon(site, dem_dir)
+    return moon_window(site, dem_dir)
 
 
 def moon_window(site, dem_dir):
@@ -129,12 +168,14 @@ def r3(x):
     return None if x is None else round(float(x), 3)
 
 
-def to_json(d, slope_sim, rough_sim):
+def to_json(d, slope_sim, rough_sim, mars_slope_sim=None, mars_rough_sim=None):
     return {
         "slope_hist": [r3(v) for v in d["slope_hist"]],
         "rough_hist": [r3(v) for v in d["rough_hist"]],
-        "slope_similarity": r3(slope_sim),
-        "roughness_similarity": r3(rough_sim),
+        "slope_similarity": r3(slope_sim),          # vs the Moon reference
+        "roughness_similarity": r3(rough_sim),      # vs the Moon reference
+        "mars_slope_similarity": r3(mars_slope_sim),
+        "mars_roughness_similarity": r3(mars_rough_sim),
         "slope_p50_deg": r3(d["slope_p50_deg"]),
         "slope_p90_deg": r3(d["slope_p90_deg"]),
         "rough_p50_m": r3(d["rough_p50_m"]),
@@ -146,7 +187,7 @@ def to_json(d, slope_sim, rough_sim):
 
 def null_entry():
     keys = ["slope_hist", "rough_hist", "slope_similarity", "roughness_similarity",
-            "slope_p50_deg", "slope_p90_deg", "rough_p50_m", "relief_m",
+            "mars_slope_similarity", "mars_roughness_similarity", "slope_p50_deg", "slope_p90_deg", "rough_p50_m", "relief_m",
             "valid_fraction", "window_km"]
     return {k: None for k in keys}
 
@@ -162,43 +203,66 @@ def main():
     args = ap.parse_args()
 
     sites = json.load(open(args.sites))
-    moons = [s for s in sites if s["role"] == "moon"]
-    earths = [s for s in sites if s["role"] != "moon"]
+    planets = ("moon", "mars")
+    earths = [s for s in sites if s["role"] not in planets]
     if args.only:
         keep = set(args.only.split(","))
         earths = [s for s in earths if s["id"] in keep]
 
-    # Moon reference = average of the Moon windows' histograms
-    moon_desc = {}
-    for m in moons:
-        try:
-            moon_desc[m["id"]] = describe(moon_window(m, args.dem_dir))
-            print(f"moon  {m['id']:24s} ok ({moon_desc[m['id']]['window_km']} km window)")
-        except Exception as exc:
-            print(f"moon  {m['id']:24s} FAILED: {exc}")
-    if not moon_desc:
+    # Reference for each world = average of its windows' histograms
+    desc = {p: {} for p in planets}
+    for p in planets:
+        for m in [s for s in sites if s["role"] == p]:
+            try:
+                d = describe(planet_window(m, args.dem_dir))
+                desc[p][m["id"]] = d
+                flag = "  (low coverage!)" if d["valid_fraction"] < 0.9 else ""
+                print(f"{p:5s} {m['id']:24s} ok ({d['window_km']} km window, "
+                      f"p90 slope {d['slope_p90_deg']:.1f} deg){flag}")
+            except Exception as exc:
+                print(f"{p:5s} {m['id']:24s} FAILED: {exc}")
+    if not desc["moon"]:
         raise SystemExit("No Moon DEM loaded - download the LOLA site files first (see README).")
-    ref_slope = np.mean([d["slope_hist"] for d in moon_desc.values()], axis=0)
-    ref_rough = np.mean([d["rough_hist"] for d in moon_desc.values()], axis=0)
+    if not desc["mars"]:
+        print("mars  (no Mars DEM loaded - Mars scores will be null; see README_TERRAIN.md)")
+
+    ref = {p: (np.mean([d["slope_hist"] for d in desc[p].values()], axis=0),
+               np.mean([d["rough_hist"] for d in desc[p].values()], axis=0))
+           for p in planets if desc[p]}
+
+    def sims(d, p):
+        if p not in ref:
+            return None, None
+        return intersection(d["slope_hist"], ref[p][0]), intersection(d["rough_hist"], ref[p][1])
 
     out = {}
-    # Moon windows: similarity to the OTHER Moon window(s) = the best score any Earth site could hope for
-    for mid, d in moon_desc.items():
-        others = [o for k, o in moon_desc.items() if k != mid]
-        if others:
-            ss = intersection(d["slope_hist"], np.mean([o["slope_hist"] for o in others], axis=0))
-            rs = intersection(d["rough_hist"], np.mean([o["rough_hist"] for o in others], axis=0))
-        else:
-            ss = rs = None
-        out[mid] = to_json(d, ss, rs)
+    # Each reference window vs the OTHER window(s) of the same world: how different two real
+    # spots on that world are from each other. Also scored against the other world, for interest.
+    for p in planets:
+        for mid, d in desc[p].items():
+            others = [o for k, o in desc[p].items() if k != mid]
+            if others:
+                own = (intersection(d["slope_hist"], np.mean([o["slope_hist"] for o in others], axis=0)),
+                       intersection(d["rough_hist"], np.mean([o["rough_hist"] for o in others], axis=0)))
+            else:
+                own = (None, None)
+            if p == "moon":
+                out[mid] = to_json(d, *own, *sims(d, "mars"))
+            else:
+                out[mid] = to_json(d, *sims(d, "moon"), *own)
+
+    def f(x):
+        return " -- " if x is None else f"{x:.2f}"
 
     for s in earths:
         try:
             d = describe(earth_window(s, args.dem_dir))
-            ss, rs = intersection(d["slope_hist"], ref_slope), intersection(d["rough_hist"], ref_rough)
-            out[s["id"]] = to_json(d, ss, rs)
+            ms, mr = sims(d, "moon")
+            xs, xr = sims(d, "mars")
+            out[s["id"]] = to_json(d, ms, mr, xs, xr)
             flag = "  (low coverage!)" if d["valid_fraction"] < 0.9 else ""
-            print(f"earth {s['id']:24s} slope {ss:.2f}  rough {rs:.2f}  p90 slope {d['slope_p90_deg']:.1f} deg{flag}")
+            print(f"earth {s['id']:24s} MOON slope {f(ms)} rough {f(mr)} | "
+                  f"MARS slope {f(xs)} rough {f(xr)} | p90 slope {d['slope_p90_deg']:.1f} deg{flag}")
         except Exception as exc:
             out[s["id"]] = null_entry()
             print(f"earth {s['id']:24s} SKIPPED: {exc}")

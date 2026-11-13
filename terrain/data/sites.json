@@ -16,5 +16,10 @@
   {"id": "moon_connecting_ridge", "name": "Moon: Connecting ridge (LOLA Site01)", "role": "moon",
    "dem": "moon/Site01_final_adj_5mpp_surf.tif"},
   {"id": "moon_shackleton_rim",   "name": "Moon: Shackleton rim (LOLA Site04)",   "role": "moon",
-   "dem": "moon/Site04_final_adj_5mpp_surf.tif"}
+   "dem": "moon/Site04_final_adj_5mpp_surf.tif"},
+
+  {"id": "mars_jezero_delta", "name": "Mars: Jezero crater delta and floor (Perseverance)", "role": "mars",
+   "lat": 18.47, "lon": 77.40, "dem": "mars/M20_JezeroCrater_CTXDEM_20m.tif"},
+  {"id": "mars_jezero_rim",   "name": "Mars: Jezero western crater rim",                    "role": "mars",
+   "lat": 18.40, "lon": 77.20, "dem": "mars/M20_JezeroCrater_CTXDEM_20m.tif"}
 ]
