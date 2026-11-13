@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analog Finder: Earth vs the lunar south pole</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Analog Finder</h1>
+    <p>How closely does each Earth test site match the lunar south pole, and where does the match break?</p>
+    <div id="mock-banner" hidden>Showing MOCK data. Real numbers appear when <code>web/results.json</code> exists.</div>
+  </header>
+
+  <main>
+    <section id="map-col">
+      <div id="map"></div>
+      <div id="weights">
+        <h3>Weights</h3>
+        <label>Slope <input type="range" min="0" max="3" step="0.5" value="1" data-key="slope"><span>1</span></label>
+        <label>Roughness <input type="range" min="0" max="3" step="0.5" value="1" data-key="roughness"><span>1</span></label>
+        <label>Low sun <input type="range" min="0" max="3" step="0.5" value="1" data-key="low_sun"><span>1</span></label>
+      </div>
+      <div id="ranking"><h3>Ranking</h3><ol id="rank-list"></ol></div>
+    </section>
+
+    <section id="panel">
+      <div id="site-detail"><p class="hint">Click a site on the map or in the ranking.</p></div>
+    </section>
+  </main>
+
+  <section id="cannot">
+    <h2>What no Earth site can reproduce</h2>
+    <ul id="cannot-list"></ul>
+  </section>
+
+  <footer>
+    Data: NASA LRO LOLA, NASA ASTER GDEM, NASA MODIS (AppEEARS), LRO Diviner. NASA Space Apps Challenge 2026.
+  </footer>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="vendor/chart.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

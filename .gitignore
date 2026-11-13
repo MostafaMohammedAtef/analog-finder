@@ -1,0 +1,42 @@
+# Large downloads - never commit (see CONTRIBUTING.md, rule 5)
+data/dem/**
+!data/dem/earth/
+!data/dem/moon/
+!data/dem/**/.gitkeep
+data/raw/**
+!data/raw/.gitkeep
+*.tif
+*.tiff
+*.TIF
+*.img
+*.IMG
+*.zip
+*.hdf
+*.nc
+
+# AppEEARS raw downloads (convert them into out/temp.json instead)
+sun/*-results.csv
+sun/*MOD11A2*.csv
+
+# Secrets - never commit
+.netrc
+_netrc
+.env
+*.token
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# QGIS side files
+*.aux.xml
+*.qgz~

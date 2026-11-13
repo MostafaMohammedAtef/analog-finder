@@ -1,0 +1,117 @@
+{
+ "haughton": {
+  "low_sun_hours": 764.2,
+  "low_sun_fraction": 0.168,
+  "median_daily_low_sun_min": 200,
+  "band_speed_deg_per_hr": 2.3,
+  "best_window": {
+   "start": "07-28",
+   "end": "11-01",
+   "days": 97
+  }
+ },
+ "sp_crater": {
+  "low_sun_hours": 345.8,
+  "low_sun_fraction": 0.078,
+  "median_daily_low_sun_min": 60,
+  "band_speed_deg_per_hr": 11.23,
+  "best_window": null
+ },
+ "meteor_crater": {
+  "low_sun_hours": 343.3,
+  "low_sun_fraction": 0.078,
+  "median_daily_low_sun_min": 60,
+  "band_speed_deg_per_hr": 11.26,
+  "best_window": null
+ },
+ "mauna_kea": {
+  "low_sun_hours": 298.5,
+  "low_sun_fraction": 0.068,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 13.21,
+  "best_window": null
+ },
+ "atacama": {
+  "low_sun_hours": 304.3,
+  "low_sun_fraction": 0.069,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 12.77,
+  "best_window": null
+ },
+ "svalbard": {
+  "low_sun_hours": 710.0,
+  "low_sun_fraction": 0.156,
+  "median_daily_low_sun_min": 270,
+  "band_speed_deg_per_hr": 1.74,
+  "best_window": {
+   "start": "08-12",
+   "end": "10-21",
+   "days": 71
+  }
+ },
+ "peary_land": {
+  "low_sun_hours": 688.5,
+  "low_sun_fraction": 0.152,
+  "median_daily_low_sun_min": 380,
+  "band_speed_deg_per_hr": 1.26,
+  "best_window": {
+   "start": "08-21",
+   "end": "10-13",
+   "days": 54
+  }
+ },
+ "dry_valleys": {
+  "low_sun_hours": 725.8,
+  "low_sun_fraction": 0.166,
+  "median_daily_low_sun_min": 240,
+  "band_speed_deg_per_hr": 2.02,
+  "best_window": {
+   "start": "08-20",
+   "end": "11-09",
+   "days": 82
+  }
+ },
+ "holuhraun": {
+  "low_sun_hours": 957.3,
+  "low_sun_fraction": 0.211,
+  "median_daily_low_sun_min": 140,
+  "band_speed_deg_per_hr": 3.85,
+  "best_window": {
+   "start": "10-20",
+   "end": "02-24",
+   "days": 128
+  }
+ },
+ "khaybar": {
+  "low_sun_hours": 305.3,
+  "low_sun_fraction": 0.069,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 12.65,
+  "best_window": null
+ },
+ "kamil": {
+  "low_sun_hours": 301.2,
+  "low_sun_fraction": 0.068,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 12.97,
+  "best_window": null
+ },
+ "black_desert": {
+  "low_sun_hours": 314.8,
+  "low_sun_fraction": 0.071,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 12.27,
+  "best_window": null
+ },
+ "gilf_kebir": {
+  "low_sun_hours": 299.0,
+  "low_sun_fraction": 0.068,
+  "median_daily_low_sun_min": 50,
+  "band_speed_deg_per_hr": 12.85,
+  "best_window": null
+ },
+ "_moon": {
+  "low_sun_fraction": 1.0,
+  "note": "At the lunar south pole the Sun stays about 1-2 deg above the horizon (NASA lighting study, Litaker et al., NTRS 20240011393) and moves very slowly."
+ }
+}

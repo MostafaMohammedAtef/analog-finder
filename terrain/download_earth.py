@@ -6,16 +6,20 @@ Fallback: --source copernicus downloads Copernicus GLO-30 tiles from the public
   AWS bucket (no login needed).
 
 Usage:
-  python download_earth.py                     # all Earth sites, ASTER
-  python download_earth.py --only svalbard     # one site
-  python download_earth.py --source copernicus
+  python terrain/download_earth.py                     # all Earth sites, ASTER
+  python terrain/download_earth.py --only svalbard     # one site
+  python terrain/download_earth.py --source copernicus
 """
 import argparse
 import json
 import math
 import os
+import sys
 import urllib.request
 
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _ROOT)
+os.chdir(_ROOT)  # all paths below are relative to the repo root
 from constants import WINDOW_M
 
 
