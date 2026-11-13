@@ -1,0 +1,195 @@
+{
+  "haughton": {
+    "why": "23 km impact crater on Devon Island and home of the Haughton-Mars Project, the best-studied Moon/Mars field site. At 75 N it gets long stretches of low sun around the equinoxes.",
+    "works": [
+      "Real impact-crater morphology: rim, terraces, breccia hills",
+      "Polar-desert ground with little vegetation",
+      "Low sun angles in spring and autumn, long shadows",
+      "Existing field-station infrastructure and decades of analog studies"
+    ],
+    "breaks": [
+      "Target rock is carbonate (dolomite, limestone) and impact breccia, not basalt or anorthosite",
+      "Surface is lighter grey but chemically nothing like the lunar highlands",
+      "Snow cover outside the short summer can hide the terrain",
+      "Permafrost and running water in summer shape the ground in un-lunar ways"
+    ],
+    "access": "Charter flight from Resolute Bay, Nunavut; summer field season only (July-August). Permits from Nunavut authorities."
+  },
+  "sp_crater": {
+    "why": "Cinder cone and lava flow in the San Francisco volcanic field, next to the Black Point lava flow used for NASA Desert RATS rover and EVA tests.",
+    "works": [
+      "Fresh, blocky volcanic terrain with steep cone flanks",
+      "Dark basaltic andesite, close in composition to lunar mare basalt",
+      "Dry, unvegetated surface",
+      "Proven NASA test logistics in the surrounding area"
+    ],
+    "breaks": [
+      "Mid-latitude: the Sun crosses the 0-5 degree band in minutes, not days",
+      "Dark mare-like rock, much darker than the bright south-pole highlands",
+      "Volcanic, not impact, terrain"
+    ],
+    "access": "About 50 km north of Flagstaff, Arizona. Much of the area is private ranch land, so access needs landowner permission."
+  },
+  "meteor_crater": {
+    "why": "1.2 km simple impact crater, the classic training site for Apollo astronauts and still used for geology training.",
+    "works": [
+      "Fresh simple-crater shape: raised rim, steep walls, ejecta blanket",
+      "Bowl-shaped crater similar to small lunar craters",
+      "Dry, sparsely vegetated surface"
+    ],
+    "breaks": [
+      "Target rocks are sandstone and limestone, not basalt or anorthosite",
+      "Bright sandstone ejecta is closer in brightness to the highlands than basalt, but it is a different material",
+      "Mid-latitude: low sun lasts only minutes each day",
+      "Window is mostly flat plain around a single crater, which dilutes the crater's slope signal"
+    ],
+    "access": "Privately owned with a visitor centre off Interstate 40, east of Flagstaff. Crater-floor access needs permission from the owner."
+  },
+  "mauna_kea": {
+    "why": "Upper slopes near Hale Pohaku host NASA's in-situ resource utilisation (ISRU) field tests of 2010 and 2012 on volcanic tephra.",
+    "works": [
+      "Basaltic tephra and cinder cones, a good regolith-handling test bed",
+      "Little vegetation at altitude",
+      "Steep cone flanks give a wide slope range"
+    ],
+    "breaks": [
+      "Lowest-latitude site (19.8 N): almost no low-sun time at all",
+      "Dark basalt, unlike the bright highlands",
+      "Thin atmosphere still present; weather, snow on the summit in winter"
+    ],
+    "access": "Road from Hilo to Hale Pohaku. The mountain is sacred to Native Hawaiians and managed by the Maunakea authority; field work needs permits and cultural consultation."
+  },
+  "atacama": {
+    "why": "Yungay is one of the driest places on Earth and a standard analog site for robotic and life-detection tests.",
+    "works": [
+      "Hyperarid, almost lifeless soil",
+      "Very stable weather and clear skies for testing",
+      "Bright, fine-grained surface"
+    ],
+    "breaks": [
+      "Sediments and salt crusts, not igneous rock",
+      "Mostly gentle alluvial slopes, few steep or cratered surfaces",
+      "Mid-latitude (24 S): short low-sun periods"
+    ],
+    "access": "Road access from Antofagasta, Chile. Easiest logistics of the high-desert sites."
+  },
+  "svalbard": {
+    "why": "Bockfjorden's Sverrefjell volcano and hot-spring deposits were used by the AMASE Mars expeditions but have never been scored for lunar low-sun conditions.",
+    "works": [
+      "Basalt with mantle xenoliths, close to mare-type rock",
+      "Very high latitude (79.5 N): weeks of low sun around the equinoxes",
+      "Sparse vegetation on volcanic slopes"
+    ],
+    "breaks": [
+      "Dark basalt, unlike the bright highlands",
+      "Fjord, glaciers and snow sit inside or near the 10 km window",
+      "Polar night in winter and midnight sun in summer, so low sun is seasonal"
+    ],
+    "access": "Flight to Longyearbyen, then boat to Bockfjorden in summer. Governor of Svalbard rules apply, including polar bear protection."
+  },
+  "peary_land": {
+    "why": "Ice-free polar desert at 82.5 N, one of the northernmost bare-ground regions on Earth.",
+    "works": [
+      "Extreme latitude: the longest low-sun seasons among Northern Hemisphere sites",
+      "Very dry, nearly unvegetated ground",
+      "Large ice-free area"
+    ],
+    "breaks": [
+      "Mostly sedimentary rock, not basalt or anorthosite",
+      "Snow cover for much of the year",
+      "Near the 83 N edge of ASTER GDEM coverage"
+    ],
+    "access": "Inside Northeast Greenland National Park; access needs a Greenland government permit and charter flights. Very expensive and remote."
+  },
+  "dry_valleys": {
+    "why": "The largest ice-free area in Antarctica, with months of low sun each year.",
+    "works": [
+      "Southern high latitude (77.5 S): long low-sun periods, like the lunar south pole",
+      "Cold, dry, wind-scoured surface",
+      "Dolerite and granite boulder fields, with steep valley walls"
+    ],
+    "breaks": [
+      "Lakes and glaciers may sit inside the 10 km window",
+      "Mixed rock types (granite, dolerite, sandstone)",
+      "Permafrost and seasonal meltwater"
+    ],
+    "access": "Only through a national Antarctic programme (e.g. US Antarctic Program from McMurdo Station) by helicopter. Specially managed area with strict environmental rules."
+  },
+  "holuhraun": {
+    "why": "Fresh basalt lava field from the 2014-15 eruption, at mid-to-high latitude (64.9 N).",
+    "works": [
+      "Very fresh basalt, close to mare composition",
+      "Unweathered, unvegetated surface",
+      "Low sun for a good part of the day in spring and autumn"
+    ],
+    "breaks": [
+      "Lava-flow surface, not impact-cratered",
+      "Dark basalt, unlike the bright highlands",
+      "Snow cover in winter; volcanic gas and weather"
+    ],
+    "access": "In Vatnajokull National Park, reached by highland 4x4 tracks open only in summer."
+  },
+  "khaybar": {
+    "why": "Large basalt volcanic field in western Saudi Arabia with cones and lava tubes, such as Umm Jirsan.",
+    "works": [
+      "Extensive dry basalt surface",
+      "Lava tubes as an analog for lunar shelter and cave exploration",
+      "Cinder cones and flows give varied slopes"
+    ],
+    "breaks": [
+      "Low latitude (25 N): low sun lasts only minutes",
+      "Dark basalt, unlike the bright highlands",
+      "Volcanic, not impact, terrain"
+    ],
+    "access": "Road access from Medina or Khaybar town. Tourist visa available; lava tube visits are best arranged with the Saudi Geological Survey."
+  },
+  "kamil": {
+    "why": "A pristine 45 m impact crater made by an iron meteorite only a few thousand years ago, among the best-preserved small craters on Earth.",
+    "works": [
+      "Fresh crater with bright and dark ejecta rays, like small fresh lunar craters",
+      "Bare, dry desert with no vegetation",
+      "Stable, clear weather"
+    ],
+    "breaks": [
+      "At 45 m across, the crater is only about 1.5 pixels in a 30 m DEM, so the score mostly reflects the flat plain around it",
+      "Target rock is sandstone, not basalt or anorthosite",
+      "Low latitude (22 N): the Sun crosses 0 to 5 degrees in roughly 20 to 25 minutes"
+    ],
+    "access": "Remote corner of Egypt's Western Desert near the Sudan and Libya borders. Needs military permits and a multi-day 4x4 expedition."
+  },
+  "black_desert": {
+    "why": "Hills capped with dark basalt and dolerite over sandstone south of Bahariya Oasis, the most reachable Egyptian site from Cairo.",
+    "works": [
+      "Dark volcanic caps scattered across the surface",
+      "Dry, bare desert with isolated hills",
+      "Easy access for repeated field tests"
+    ],
+    "breaks": [
+      "Dark basalt over orange sandstone: patchy brightness, unlike the uniform highlands",
+      "Mostly gentle slopes between the hills",
+      "Low latitude (28 N): low sun lasts only minutes each day"
+    ],
+    "access": "About 370 km by paved road from Cairo via Bahariya Oasis. Day trips by 4x4 are common."
+  },
+  "gilf_kebir": {
+    "why": "A large sandstone plateau with steep scarps and cliffs, used here to test the steep end of the slope histogram.",
+    "works": [
+      "Steep scarps and cliffs fill the high-slope bins",
+      "Bare, hyperarid desert",
+      "Isolated and unvisited, so the surface is undisturbed"
+    ],
+    "breaks": [
+      "Sandstone, not basalt or anorthosite",
+      "Erosional scarps, not impact rims",
+      "Low latitude (23 N): low sun lasts only minutes each day"
+    ],
+    "access": "Inside Gilf Kebir National Park. Needs military permits, an escort, and a multi-day 4x4 expedition from Dakhla or Kharga."
+  },
+  "_global": [
+    "1/6 gravity",
+    "Vacuum",
+    "Radiation",
+    "Temperature extremes",
+    "Regolith and dust"
+  ]
+}
