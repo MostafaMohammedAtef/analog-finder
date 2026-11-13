@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lunar South Pole Analog Scorer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+         :root {
+            --bg: #0e1117;
+            --panel: #161b22;
+            --line: #30363d;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --accent: #58a6ff;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        header {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--line);
+            background: var(--panel);
+        }
+        
+        header h1 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        header .tag {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        #mockBadge {
+            display: none;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #9e6a03;
+            color: #fff;
+        }
+        
+        main {
+            display: flex;
+            height: calc(100% - 52px);
+        }
+        
+        #map {
+            flex: 1;
+        }
+        
+        aside {
+            width: 380px;
+            overflow-y: auto;
+            border-left: 1px solid var(--line);
+            background: var(--panel);
+            padding: 16px;
+        }
+        
+        h2 {
+            font-size: 15px;
+            margin: 0 0 4px;
+        }
+        
+        h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--muted);
+            margin: 18px 0 6px;
+        }
+        
+        .muted {
+            color: var(--muted);
+        }
+        
+        .role {
+            display: inline-block;
+            font-size: 11px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+        }
+        
+        .scores {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+        
+        .scores div {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px;
+            text-align: center;
+        }
+        
+        .scores b {
+            display: block;
+            font-size: 16px;
+        }
+        
+        .scores span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        
+        li {
+            margin: 2px 0;
+        }
+        
+        .works li::marker {
+            content: "✓  ";
+            color: #3fb950;
+        }
+        
+        .breaks li::marker {
+            content: "✗  ";
+            color: #f85149;
+        }
+        
+        .rank {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .rank:hover {
+            background: var(--bg);
+        }
+        
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        
+        .slider {
+            display: grid;
+            grid-template-columns: 80px 1fr 32px;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        
+        input[type=range] {
+            width: 100%;
+        }
+        
+        button.back {
+            background: none;
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 4px;
+            padding: 3px 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        #cannot {
+            position: absolute;
+            left: 12px;
+            bottom: 24px;
+            z-index: 1000;
+            max-width: 260px;
+            background: rgba(22, 27, 34, .94);
+            border: 1px solid #f85149;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        
+        #cannot h3 {
+            margin: 0 0 6px;
+            color: #f85149;
+        }
+        
+        #legend {
+            position: absolute;
+            right: 396px;
+            bottom: 24px;
+            z-index: 1000;
+            background: rgba(22, 27, 34, .94);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+        }
+        
+        #legend .bar {
+            width: 160px;
+            height: 10px;
+            border-radius: 3px;
+            margin: 4px 0;
+            background: linear-gradient(90deg, #440154, #3b528b, #21918c, #5ec962, #fde725);
+        }
+        
+        #legend .ends {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+        }
+        
+        .chartbox {
+            position: relative;
+            height: 240px;
+        }
+        
+        .chartbox.short {
+            height: 120px;
+        }
+        
+        #error {
+            display: none;
+            padding: 12px;
+            background: #5a1e1e;
+        }
+        
+        @media (max-width: 800px) {
+            main {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                height: 50%;
+            }
+            #legend {
+                right: 12px;
+                bottom: auto;
+                top: 64px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Lunar South Pole Analog Scorer</h1>
+        <span class="tag">How well can Earth stand in for the Moon's south pole?</span>
+        <span id="mockBadge">MOCK DATA</span>
+    </header>
+    <div id="error"></div>
+    <main>
+        <div id="map" style="position:relative">
+            <div id="cannot">
+                <h3>No Earth site can reproduce</h3>
+                <ul id="cannotList"></ul>
+            </div>
+            <div id="legend">Overall score
+                <div class="bar"></div>
+                <div class="ends"><span>0</span><span>1</span></div>
+                <div class="muted"><span class="dot" style="background:#6e7681"></span>no data yet</div>
+            </div>
+        </div>
+        <aside id="panel"></aside>
+    </main>
+
+    <script>
+        // ===== The one line to switch from mock to real data =====
+        const DATA_URL = "mock_results.json"; // change to "results.json" once merge.py output lands
+        // ==========================================================
+
+        const METRICS = [{
+            key: "slope",
+            label: "Slope"
+        }, {
+            key: "roughness",
+            label: "Roughness"
+        }, {
+            key: "low_sun",
+            label: "Low sun"
+        }, ];
+        const weights = {
+            slope: 1,
+            roughness: 1,
+            low_sun: 1
+        };
+        let DATA = null,
+            markers = {},
+            radarChart = null,
+            tempChart = null,
+            selectedId = null;
+
+        // --- helpers -----------------------------------------------------------
+        const fmt = (v, d = 2) => (v === null || v === undefined || Number.isNaN(v)) ? "—" : Number(v).toFixed(d);
+        const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[c]));
+
+        // Viridis-like ramp, 0..1 -> hex
+        const RAMP = ["#440154", "#3b528b", "#21918c", "#5ec962", "#fde725"];
+
+        function colorFor(v) {
+            if (v === null || v === undefined) return "#6e7681";
+            const t = Math.max(0, Math.min(1, v)) * (RAMP.length - 1);
+            const i = Math.min(Math.floor(t), RAMP.length - 2),
+                f = t - i;
+            const a = parseInt(RAMP[i].slice(1), 16),
+                b = parseInt(RAMP[i + 1].slice(1), 16);
+            const ch = s => Math.round(((a >> s) & 255) * (1 - f) + ((b >> s) & 255) * f);
+            return "#" + [16, 8, 0].map(s => ch(s).toString(16).padStart(2, "0")).join("");
+        }
+
+        // Weighted overall from available (non-null) scores. Equal weights = plan's "mean of the three".
+        function overall(site) {
+            const s = site.scores || {};
+            let num = 0,
+                den = 0,
+                missing = 0;
+            for (const m of METRICS) {
+                const v = s[m.key];
+                if (v === null || v === undefined) {
+                    missing++;
+                    continue;
+                }
+                num += weights[m.key] * v;
+                den += weights[m.key];
+            }
+            return {
+                value: den > 0 ? num / den : null,
+                partial: missing > 0 && den > 0
+            };
+        }
+
+        // --- map ---------------------------------------------------------------
+        const map = L.map("map", {
+            worldCopyJump: true,
+            minZoom: 2
+        }).setView([25, 0], 2);
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: "abcd",
+            maxZoom: 12
+        }).addTo(map);
+
+        function drawMarkers() {
+            for (const site of DATA.sites) {
+                const o = overall(site);
+                if (!markers[site.id]) {
+                    markers[site.id] = L.circleMarker([site.lat, site.lon], {
+                        radius: 9,
+                        weight: 2,
+                        color: "#fff",
+                        fillOpacity: 0.95
+                    }).addTo(map).on("click", () => selectSite(site.id));
+                }
+                markers[site.id].setStyle({
+                        fillColor: colorFor(o.value)
+                    })
+                    .bindTooltip(`${esc(site.name)}<br>Overall: ${fmt(o.value)}${o.partial ? " (partial)" : ""}`);
+            }
+        }
+
+        // --- panel: overview (ranking + weights) ------------------------------
+        function renderOverview() {
+            selectedId = null;
+            const ranked = [...DATA.sites].map(s => ({
+                    s,
+                    o: overall(s)
+                }))
+                .sort((a, b) => (b.o.value == null ? -1 : b.o.value) - (a.o.value == null ? -1 : a.o.value));
+            document.getElementById("panel").innerHTML = `
+    <h2>Site ranking</h2>
+    <div class="muted">Click a site on the map or in the list.</div>
+    ${weightSliders()}
+    <h3>All sites</h3>
+    ${ranked.map(({ s, o }, i) => ` <
+                div class = "rank"
+            data - id = "${esc(s.id)}" >
+                <
+                span > < span class = "dot"
+            style = "background:${colorFor(o.value)}" > < /span>${i + 1}. ${esc(s.name)}</span >
+                <
+                b > $ {
+                    fmt(o.value)
+                } < /b> < /
+                div > `).join("")}`;
+            document.querySelectorAll(".rank").forEach(el => el.onclick = () => selectSite(el.dataset.id));
+            bindSliders();
+        }
+
+        function weightSliders() {
+            return `<h3>Score weights</h3>` + METRICS.map(m => `
+    <div class="slider"><label for="w_${m.key}">${m.label}</label>
+      <input type="range" id="w_${m.key}" min="0" max="3" step="0.5" value="${weights[m.key]}">
+      <span id="wv_${m.key}">${weights[m.key]}</span></div>`).join("");
+        }
+
+        function bindSliders() {
+            for (const m of METRICS) {
+                const el = document.getElementById("w_" + m.key);
+                if (!el) continue;
+                el.oninput = () => {
+                    weights[m.key] = Number(el.value);
+                    document.getElementById("wv_" + m.key).textContent = el.value;
+                    drawMarkers();
+                    if (selectedId) updateScoreTiles();
+                    else refreshRanking();
+                };
+            }
+        }
+
+        function refreshRanking() {
+            // re-render the list without rebuilding the sliders (keeps drag smooth)
+            const panel = document.getElementById("panel");
+            const keep = [...panel.querySelectorAll("input[type=range]")].map(e => e.value);
+            renderOverview();
+            panel.querySelectorAll("input[type=range]").forEach((e, i) => e.value = keep[i]);
+        }
+
+        // --- panel: site detail -----------------------------------------------
+        function selectSite(id) {
+            const site = DATA.sites.find(s => s.id === id);
+            if (!site) return;
+            selectedId = id;
+            map.panTo([site.lat, site.lon]);
+            const bw = site.best_window;
+            document.getElementById("panel").innerHTML = `
+    <button class="back" id="back">← All sites</button>
+    <h2>${esc(site.name)}</h2>
+    <span class="role">${esc(site.role)}</span>
+    <span class="muted"> ${fmt(site.lat, 2)}°, ${fmt(site.lon, 2)}°</span>
+    <div class="scores" id="tiles"></div>
+    <h3>Match to the lunar south pole</h3>
+    <div class="chartbox"><canvas id="radar"></canvas></div>
+    <h3>Best low-sun dates (2027)</h3>
+    <div>${bw && bw.start ? `${esc(bw.start)} → ${esc(bw.end)}` : '<span class="muted">Not yet available</span>'}</div>
+    ${site.why ? `<h3>Why it's in</h3><div>${esc(site.why)}</div>` : ""}
+    <h3>What works</h3>${list(site.works, "works")}
+    <h3>What breaks</h3>${list(site.breaks, "breaks")}
+    ${site.access ? `<h3>Access</h3><div>${esc(site.access)}</div>` : ""}
+    <h3>Surface temperature: Earth vs Moon</h3>
+    <div class="chartbox short"><canvas id="temp"></canvas></div>
+    <div class="muted" id="tempNote" style="font-size:12px"></div>
+    ${weightSliders()}`;
+  document.getElementById("back").onclick = renderOverview;
+  updateScoreTiles();
+  drawRadar(site);
+  drawTemp(site);
+  bindSliders();
+}
+
+function list(items, cls) {
+  return Array.isArray(items) && items.length
+    ? `<ul class="${cls}">${items.map(i => `<li>${esc(i)}</li>`).join("")}</ul>`
+    : '<div class="muted">Not yet available</div>';
+}
+
+function updateScoreTiles() {
+  const site = DATA.sites.find(s => s.id === selectedId);
+  const o = overall(site), s = site.scores || {};
+  document.getElementById("tiles").innerHTML =
+    METRICS.map(m => `<div><b>${fmt(s[m.key])}</b><span>${m.label}</span></div>`).join("") +
+    `<div style="border-color:${colorFor(o.value)}"><b>${fmt(o.value)}</b><span>Overall${o.partial ? "*" : ""}</span></div>`;
+}
+
+Chart.defaults.color = "#8b949e";
+Chart.defaults.borderColor = "#30363d";
+
+function drawRadar(site) {
+  if (radarChart) radarChart.destroy();
+  const s = site.scores || {};
+  radarChart = new Chart(document.getElementById("radar"), {
+    type: "radar",
+    data: {
+      labels: METRICS.map(m => m.label),
+      datasets: [
+        { label: "Lunar south pole (perfect match)", data: METRICS.map(() => 1),
+          borderColor: "#8b949e", borderDash: [4, 4], backgroundColor: "transparent", pointRadius: 0 },
+        { label: site.name, data: METRICS.map(m => s[m.key] == null ? 0 : s[m.key]),
+          borderColor: "#58a6ff", backgroundColor: "rgba(88,166,255,.25)" },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: { r: { min: 0, max: 1, ticks: { stepSize: 0.25, backdropColor: "transparent" } } },
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 12 } } },
+    },
+  });
+}
+
+function drawTemp(site) {
+  if (tempChart) tempChart.destroy();
+  const t = site.temp || {}, mt = (DATA.moon && DATA.moon.temp) || {};
+  const earthOk = t.lst_min_c != null && t.lst_max_c != null;
+  const moonOk = mt.min_c != null && mt.max_c != null;
+  const note = [];
+  if (!earthOk) note.push("Earth temperature not yet available.");
+  if (!moonOk) note.push("Moon (Diviner) temperature not yet available.");
+  note.push("Shown for context; not part of the score.");
+  document.getElementById("tempNote").textContent = note.join(" ");
+  tempChart = new Chart(document.getElementById("temp"), {
+    type: "bar",
+    data: {
+      labels: ["This site", "Moon (Diviner)"],
+      datasets: [{
+        data: [earthOk ? [t.lst_min_c, t.lst_max_c] : null, moonOk ? [mt.min_c, mt.max_c] : null],
+        backgroundColor: ["#d29922", "#8b949e"], borderSkipped: false, borderRadius: 3,
+      }],
+    },
+    options: {
+      indexAxis: "y", maintainAspectRatio: false,
+      scales: { x: { title: { display: true, text: "°C (min → max)" } } },
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.raw ? `${c.raw[0]} °C to ${c.raw[1]} °C` : "no data" } } },
+    },
+  });
+}
+
+// --- boot ---------------------------------------------------------------
+fetch(DATA_URL, { cache: "no-store" })
+  .then(r => { if (!r.ok) throw new Error(`${DATA_URL}: HTTP ${r.status}`); return r.json(); })
+  .then(data => {
+    DATA = data;
+    DATA.sites = DATA.sites || [];
+    if (DATA_URL.includes("mock")) document.getElementById("mockBadge").style.display = "inline-block";
+    document.getElementById("cannotList").innerHTML =
+      (DATA.cannot_reproduce || []).map(x => `<li>${esc(x)}</li>`).join("") || '<li class="muted">—</li>';
+    drawMarkers();
+    renderOverview();
+  })
+  .catch(err => {
+    const e = document.getElementById("error");
+    e.style.display = "block";
+    e.textContent = `Could not load data (${err.message}). If you opened the file directly, run "python -m http.server" in this folder instead.`;
+  });
+    </script>
+</body>
+
+</html>
