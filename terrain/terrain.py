@@ -23,7 +23,7 @@ from pyproj import CRS, Transformer
 from rasterio.merge import merge
 from rasterio.transform import from_origin
 from rasterio.warp import Resampling, reproject
-from scipy.ndimage import uniform_filter
+from scipy.ndimage import label, maximum_filter, minimum_filter, uniform_filter
 
 from constants import GRID_M, N_PIX, ROUGH_BINS, ROUGH_WIN, SLOPE_BINS
 
@@ -150,6 +150,27 @@ def intersection(p, q):
     return float(np.minimum(p, q).sum())
 
 
+def mask_water(z, min_pixels=50):
+    """Blank out sea, fjords and lakes so they don't count as flat ground.
+
+    Copernicus DEM flattens water bodies to a single height. So: pixels whose 3 x 3
+    neighbourhood is perfectly level, in connected patches of at least `min_pixels`
+    (50 x 30 m x 30 m = 0.045 km2), are water. Returns (masked copy, water fraction)."""
+    filled = np.where(np.isfinite(z), z, np.inf)
+    level = (maximum_filter(filled, 3) - minimum_filter(np.where(np.isfinite(z), z, -np.inf), 3)) < 0.01
+    level &= np.isfinite(z)
+    labels, n = label(level)
+    if n == 0:
+        return z, 0.0
+    sizes = np.bincount(labels.ravel())
+    big = sizes >= min_pixels
+    big[0] = False
+    water = big[labels]
+    out = z.copy()
+    out[water] = np.nan
+    return out, float(water.mean())
+
+
 def describe(z):
     s, r = slope_deg(z), roughness_m(z)
     return {
@@ -181,6 +202,7 @@ def to_json(d, slope_sim, rough_sim, mars_slope_sim=None, mars_rough_sim=None):
         "rough_p50_m": r3(d["rough_p50_m"]),
         "relief_m": r3(d["relief_m"]),
         "valid_fraction": r3(d["valid_fraction"]),
+        "water_fraction": r3(d.get("water_fraction")),
         "window_km": d["window_km"],
     }
 
@@ -188,7 +210,7 @@ def to_json(d, slope_sim, rough_sim, mars_slope_sim=None, mars_rough_sim=None):
 def null_entry():
     keys = ["slope_hist", "rough_hist", "slope_similarity", "roughness_similarity",
             "mars_slope_similarity", "mars_roughness_similarity", "slope_p50_deg", "slope_p90_deg", "rough_p50_m", "relief_m",
-            "valid_fraction", "window_km"]
+            "valid_fraction", "water_fraction", "window_km"]
     return {k: None for k in keys}
 
 
@@ -256,11 +278,18 @@ def main():
 
     for s in earths:
         try:
-            d = describe(earth_window(s, args.dem_dir))
+            z = earth_window(s, args.dem_dir)
+            coverage = float(np.isfinite(z).mean())
+            z, water = mask_water(z)
+            d = describe(z)
+            d["valid_fraction"] = coverage
+            d["water_fraction"] = water
             ms, mr = sims(d, "moon")
             xs, xr = sims(d, "mars")
             out[s["id"]] = to_json(d, ms, mr, xs, xr)
             flag = "  (low coverage!)" if d["valid_fraction"] < 0.9 else ""
+            if water >= 0.01:
+                flag += f"  (water {water:.0%} ignored)"
             print(f"earth {s['id']:24s} MOON slope {f(ms)} rough {f(mr)} | "
                   f"MARS slope {f(xs)} rough {f(xr)} | p90 slope {d['slope_p90_deg']:.1f} deg{flag}")
         except Exception as exc:
